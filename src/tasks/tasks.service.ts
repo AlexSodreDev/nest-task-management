@@ -18,6 +18,6 @@ export class TasksService {
     };
 
     this.tasks.push(task);
-    return;
+    return task;
   }
 }
