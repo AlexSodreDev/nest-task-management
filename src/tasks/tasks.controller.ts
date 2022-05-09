@@ -11,14 +11,14 @@ import {
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
-import { Task } from './task-status.enum';
+import { Task } from './task.entity';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
+  constructor(private tasksService: TasksService) {}
   // Comentado para Estudo - parte referente a manipulação de dados sem banco de
   // dados
-  // constructor(private tasksService: TasksService) {}
   // @Get()
   // getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
   //   if (Object.keys(filterDto).length) {
@@ -27,10 +27,12 @@ export class TasksController {
   //     return this.tasksService.getAllTasks();
   //   }
   // }
-  // @Get('/:id')
-  // getTaskById(@Param('id') id: string): Task {
-  //   return this.tasksService.getTaskById(id);
-  // }
+
+  @Get('/:id')
+  getTaskById(@Param('id') id: string): Promise<Task> {
+    return this.tasksService.getsTaskById(id);
+  }
+
   // @Post()
   // createTask(@Body() createTaskDto: CreateTaskDto): Task {
   //   return this.tasksService.createTask(createTaskDto);

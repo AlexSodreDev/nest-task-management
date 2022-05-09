@@ -1,10 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Task, TaskStatus } from './task-status.enum';
-import { v4 as uuid } from 'uuid';
+import { TaskStatus } from './task-status.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { TasksRepository } from './tasks.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Task } from './task.entity';
 @Injectable()
 export class TasksService {
+  constructor(
+    @InjectRepository(TasksRepository)
+    private tasksRepository: TasksRepository,
+  ) {}
+
   // Comentado para Estudo - parte referente a manipulação de dados sem banco de
   // dados
   // private tasks: Task[] = [];
@@ -27,13 +34,16 @@ export class TasksService {
   //   }
   //   return tasks;
   // }
-  // getTaskById(id: string): Task {
-  //   const found = this.tasks.find((task) => task.id === id);
-  //   if (!found) {
-  //     throw new NotFoundException(`Task with ID "${id}" not found`);
-  //   }
-  //   return found;
-  // }
+
+  async getsTaskById(id: string): Promise<Task> {
+    const found = await this.tasksRepository.findOne(id);
+
+    if (!found) {
+      throw new NotFoundException(`Task with ID "${id}" not found`);
+    }
+    return found;
+  }
+
   // createTask(createTaskDto: CreateTaskDto): Task {
   //   const { title, description } = createTaskDto;
   //   const task: Task = {
