@@ -15,9 +15,11 @@ export class TasksService {
   // Comentado para Estudo - parte referente a manipulação de dados sem banco de
   // dados
   // private tasks: Task[] = [];
+
   // getAllTasks(): Task[] {
   //   return this.tasks;
   // }
+
   // getTaskWithFilters(filtersDto: GetTasksFilterDto): Task[] {
   //   const { status, search } = filtersDto;
   //   let tasks = this.getAllTasks();
@@ -35,7 +37,7 @@ export class TasksService {
   //   return tasks;
   // }
 
-  async getsTaskById(id: string): Promise<Task> {
+  async getTaskById(id: string): Promise<Task> {
     const found = await this.tasksRepository.findOne(id);
 
     if (!found) {
@@ -44,21 +46,18 @@ export class TasksService {
     return found;
   }
 
-  // createTask(createTaskDto: CreateTaskDto): Task {
-  //   const { title, description } = createTaskDto;
-  //   const task: Task = {
-  //     id: uuid(),
-  //     title,
-  //     description,
-  //     status: TaskStatus.OPEN,
-  //   };
-  //   this.tasks.push(task);
-  //   return task;
-  // }
-  // deleteTask(id: string): void {
-  //   const found = this.getTaskById(id);
-  //   this.tasks = this.tasks.filter((task) => task.id !== found.id);
-  // }
+  createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    return this.tasksRepository.createTask(createTaskDto);
+  }
+
+  async deleteTask(id: string): Promise<void> {
+    const result = await this.tasksRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with ID "${id}" not found`);
+    }
+  }
+
   // updateTaskStatus(id: string, status: TaskStatus) {
   //   const task = this.getTaskById(id);
   //   task.status = status;

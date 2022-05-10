@@ -19,6 +19,7 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
   // Comentado para Estudo - parte referente a manipulação de dados sem banco de
   // dados
+
   // @Get()
   // getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
   //   if (Object.keys(filterDto).length) {
@@ -30,17 +31,19 @@ export class TasksController {
 
   @Get('/:id')
   getTaskById(@Param('id') id: string): Promise<Task> {
-    return this.tasksService.getsTaskById(id);
+    return this.tasksService.getTaskById(id);
   }
 
-  // @Post()
-  // createTask(@Body() createTaskDto: CreateTaskDto): Task {
-  //   return this.tasksService.createTask(createTaskDto);
-  // }
-  // @Delete('/:id')
-  // deleteTask(@Param('id') id: string): void {
-  //   return this.tasksService.deleteTask(id);
-  // }
+  @Post()
+  createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+    return this.tasksService.createTask(createTaskDto);
+  }
+
+  @Delete('/:id')
+  deleteTask(@Param('id') id: string): Promise<void> {
+    return this.tasksService.deleteTask(id);
+  }
+
   // @Patch('/:id/status')
   // updateTaskStatus(
   //   @Param('id') id: string,
