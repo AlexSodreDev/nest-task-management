@@ -52,7 +52,15 @@ export class TasksRepository extends Repository<Task> {
       user,
     });
 
-    await this.save(task);
-    return task;
+    try {
+      await this.save(task);
+      return task;
+    } catch (error) {
+      this.logger.error(
+        `Failed to save task for user "${user.username}"`,
+        error.stack,
+      );
+      throw new InternalServerErrorException();
+    }
   }
 }

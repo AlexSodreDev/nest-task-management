@@ -1,4 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { TaskStatus } from './task-status.enum';
 import { TasksRepository } from './tasks.repository';
@@ -7,7 +10,7 @@ import { TasksService } from './tasks.service';
 const mockTasksRepository = () => ({
   getTasks: jest.fn(),
   findOne: jest.fn(),
-  save: jest.fn(),
+  createTask: jest.fn(),
 });
 
 const mockUser = {
@@ -63,6 +66,21 @@ describe('TasksService', () => {
       tasksRepository.findOne.mockResolvedValue(null);
       expect(tasksService.getTaskById('someId', mockUser)).rejects.toThrow(
         NotFoundException,
+      );
+    });
+  });
+
+  describe('createTask', () => {
+    it('calls TasksRepository.createTask and create a task', async () => {
+      tasksRepository.createTask.mockResolvedValue(mockTask);
+      const result = await tasksService.createTask(mockTask, mockUser);
+      expect(result).toEqual(mockTask);
+    });
+
+    it('calls TasksRepository.createTask and handles and error', async () => {
+      tasksRepository.createTask.mockResolvedValue(null);
+      expect(tasksService.createTask(mockTask, mockUser)).rejects.toThrow(
+        InternalServerErrorException,
       );
     });
   });
